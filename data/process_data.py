@@ -6,6 +6,12 @@ from sqlalchemy import create_engine
 
 
 def load_data(msg_path, cat_path):
+    '''
+
+    :param msg_path: Path of the messages file
+    :param cat_path: Path of the categories file
+    :return: Dataframe combined
+    '''
     # load messages dataset
     messages = pd.read_csv(msg_path)
 

@@ -1,11 +1,20 @@
 # Disaster Response Pipeline Project
-Disaster Response Pipeline is a part of Udacity Nanodegree in Data Science
+Disaster Response Pipeline is a part of Udacity Nanodegree in Data Science. This is a project where the datasets are </br>
+fetched, cleaned and transformed as per ETL to a dataset over which ML algorithm could be run and studied. NLTK package is used to </br>
+learn the dataset from the tweets collected by the company Figure Eight and classify the tweet to one of the 36 </br>
+categories.
 
 ### Contents
 - App : Files to be used for Flask Webapp
 - Data : Messages and Categories files corresponding to Disaster. Process_Data.py is used to fetch, clean and create Database from csv files.
 - Model : Machine Learning Classifier algorithm to train the data and save the pickle file.
 - Jupyter Notebook files to construct ETL and ML pipelines.
+
+### Libraries 
+* pandas, sqlalchemy
+* nltk, sklearn
+
+### 
 
 ### Webapp Outlook
 ![Main_Page](./app/Pic_Mainpage.png)

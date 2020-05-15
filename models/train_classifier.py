@@ -23,6 +23,10 @@ url_regex = 'http[s]?://(?:[A-Za-z]|[0-9]|[$-._@+&]|[!*\(\),]|(?:%[0-9a-fA-F][0-
 
 
 def load_data(db_path):
+    '''
+    :param db_path: database path from which the database is obtained
+    :return: X and y dataframe, categores dataframe
+    '''
     # load data from database
     engine = create_engine('sqlite:///' + db_path)
     df = pd.read_sql_table('Disaster_DB', con=engine)
@@ -34,6 +38,11 @@ def load_data(db_path):
 
 
 def tokenize(text):
+    '''
+
+    :param text: Get the text which has to be tokenized, lemmatized, changed with urlplaceholder
+    :return: clean token : which is processed
+    '''
     url = re.findall(url_regex, text)
     for u in url:
         text = text.replace(u, 'urlplaceholder')
@@ -49,6 +58,10 @@ def tokenize(text):
 
 
 def build_model():
+    '''
+
+    :return: Gridsearch which includes pipeline and parameters
+    '''
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -77,6 +90,7 @@ def display_results(y_test, y_pred):
         results.at[id + 1, 'Recall'] = recall
         results.at[id + 1, 'F1-Score'] = f1
         id = id + 1
+        print('{} --> P: {:0.3f}; R: {:0.3f}; F1: {:0.3f}'.format(col, precision, recall, f1))
     print('Average Precision: ', results['Precision'].mean())
     print('Average Recall: ', results['Recall'].mean())
     print('Average f1: ', results['F1-Score'].mean())
@@ -87,11 +101,12 @@ def display_results(y_test, y_pred):
 def evaluate_model(model, X_test, y_test, category_names):
     y_pred = model.predict(X_test.values)
     results = display_results(y_test, y_pred)
-    pass
+    return results
 
 
 def save_model(model, mdl_path):
     pickle.dump(model, open(mdl_path, 'wb'))
+
 
 
 def main():
@@ -107,13 +122,15 @@ def main():
         print('Training model...')
         model.fit(X_train, y_train)
 
-        print('Evaluating model...')
-        evaluate_model(model, X_test, y_test, category_names)
-
         print('Saving model...\n    MODEL: {}'.format(mdl_path))
         save_model(model, mdl_path)
-
         print('Trained model saved!')
+
+        print('Evaluating model...')
+        results = evaluate_model(model, X_test, y_test, category_names)
+        results.to_csv('Results.csv', index=True)
+
+        print('Done!')
 
     else:
         print('Please provide the filepath of the disaster messages database ' \
